@@ -2708,13 +2708,10 @@
           : own ? btn('Equipar', () => { SH.equip(it.id); S.play('select'); shopScreen(cat); }, 'ghost sm')
           : btn(offer ? h('span', null, h('s', null, '✦ ' + it.price), ' ✦ ' + pr) : '✦ ' + pr, () => { const r = SH.buy(it.id); if (r.ok) { SH.equip(it.id); S.play('confirm'); shopScreen(cat); } else { S.play('error'); const m = document.querySelector('.shmsg'); if (m) m.textContent = r.error; } }, SH.coins() >= pr ? 'gold sm' : 'ghost sm'));
     };
+    // (31/10/2026) La Tienda queda en «próximamente»: se quitaron los cosméticos de pago; lo único que se consigue es el Cofre de skins.
     mount(h('div', { class: 'scr' }, h('button', { class: 'back', onclick: menu }, '← Menú'), h('h1', null, 'Tienda'),
       h('div', { class: 'ptsbar' }, h('span', { class: 'pts' }, '✦ ', h('b', null, String(SH.coins())), ' puntos'), btn('🎴 Cofre de skins', () => boxScreen(), 'gold sm')),
-      offerIds.length ? h('div', null, h('h2', null, '🔥 Ofertas de hoy'), h('div', { class: 'sub' }, 'Cambian cada día. Aquí compras directo: el premio es seguro.'), h('div', { class: 'shgrid' }, offerIds.map(id => tile(SH.get(id))))) : h('div', { class: 'sub' }, 'La Tienda ya no vende cosméticos: ahora todo sale del Cofre de skins.'),
-      h('div', { class: 'tabs shtabs' }, SH.CATS.map(c => h('button', { class: 'tab' + (c.id === cat ? ' on' : ''), onclick: () => shopScreen(c.id) }, c.icon + ' ' + c.name))),
-      sample(), h('div', { class: 'msg err shmsg' }),
-      SH.exclusive(cat).length ? h('div', null, h('h2', null, '🏅 Tus premios de temporada'), h('div', { class: 'sub' }, 'Se consiguen por rango al cerrar cada temporada: no se compran ni salen de cajas.'), h('div', { class: 'shgrid' }, SH.exclusive(cat).map(tile))) : null,
-      h('div', { class: 'shgrid' }, items.map(tile))));
+      h('div', { class: 'stage-soon', style: 'text-align:center;padding:70px 0' }, h('div', { style: 'font-size:54px' }, '🛍️'), h('h2', null, 'Próximamente'), h('div', { class: 'sub' }, 'Estamos preparando la nueva Tienda. Mientras tanto, consigue skins en el Cofre.'))));
   }
   // ---------------- cajas (estilo apertura de contenedores de CS2) ----------------
   const skSample = () => C.all().find(c => c.kind === 'monster' && c.img);
