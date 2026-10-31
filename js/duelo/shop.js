@@ -131,13 +131,8 @@
   // ---------------- cajas ----------------
   // w = probabilidad (%) de cada rareza. Cada premio sale en UNA sola caja (reparto automático), y la Tienda lo vende más caro
   // que lo que cuesta la caja donde puede salir. pity = tras n aperturas sin la rareza `to` (o mejor), la siguiente la trae segura.
-  const BOXES = [
-    { id: 'plata', name: 'Caja de Plata', price: 60, w: { c: 80, r: 17, e: 3 }, pity: { n: 15, to: 'e' }, color: '#cfd8e8', icon: '📦' },
-    { id: 'oro', name: 'Caja de Oro', price: 150, w: { c: 50, r: 40, e: 10 }, pity: { n: 10, to: 'e' }, color: '#ffd84a', icon: '🎁' },
-    { id: 'premium', name: 'Caja Premium', price: 300, w: { r: 55, e: 38, l: 7 }, pity: { n: 12, to: 'l' }, color: '#c47bff', icon: '💎' },
-    { id: 'especial', name: 'Caja Especial', price: 600, w: { e: 80, l: 20 }, pity: { n: 5, to: 'l' }, color: '#ff7a4a', icon: '🔮' },
-    { id: 'legendaria', name: 'Caja Legendaria', price: 1100, w: { l: 100 }, pity: null, color: '#fff2a8', icon: '👑' }
-  ];
+  // (31/10/2026) Se quitaron las cajas de Plata, Oro, Premium, Especial y Legendaria: sólo queda el Cofre de skins. Lo que ya se compró se conserva.
+  const BOXES = [];
   // Cofre de skins: todas las skins de ilustración, cada una con la misma probabilidad (100 % / cantidad de skins).
   // Va aparte de BOXES (no tiene rarezas ni garantía) pero se abre con el mismo openBox() y la misma ruleta.
   const SKIN_BOX = { id: 'skins', kind: 'skins', name: 'Cofre de skins', price: 250, dupRefund: 60, color: '#4fd1c5', icon: '🎴' };
@@ -148,6 +143,7 @@
   const boxOf = {};
   for (const R of ['c', 'r', 'e', 'l']) {
     const bs = BOXES.filter(b => b.w[R]), its = ITEMS.filter(i => i.rar === R && !i.free && !i.box), sks = ITEMS.filter(i => i.rar === R && i.box);
+    if (!bs.length) continue;
     its.forEach((it, k) => { boxOf[it.id] = bs[k % bs.length].id; });
     sks.forEach((it, k) => { boxOf[it.id] = bs[k % bs.length].id; });      // las skins se reparten aparte: así cada caja trae al menos una
   }
@@ -306,7 +302,7 @@
   function buy(id) {
     const p = pts(), it = byId(id);
     if (!p || !it) return { ok: false, error: 'No existe.' };
-    if (it.box) return { ok: false, error: 'Las skins sólo salen en cajas.' };
+    if (it.box) return { ok: false, error: 'Las skins sólo salen en el Cofre de skins.' };
     if (it.excl) return { ok: false, error: 'Es un premio de temporada: sólo se consigue por rango.' };
     if (owns(id)) return { ok: false, error: 'Ya lo tienes.' };
     const pr = priceOf(id);

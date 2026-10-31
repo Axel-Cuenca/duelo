@@ -147,3 +147,5 @@ match /ranks/{season}/p/{uid} {
 - Invitaciones cruzadas (29-10-2026): la conexión directa (`G.Net`) es única, así que `joinByCode` hace `endCurrent()` ANTES de `Online.joinRoom` si hay una sala sin empezar (antes el cierre de la sala vieja cortaba la conexión recién abierta y la sala se colgaba); `hostNow` deja la sala ajena antes de abrir la propia; `FriendsUI.invite` entra en la sala del amigo si él ya te había invitado. Botón «Rechazar» en el aviso y en el panel. No se pudo probar con Firebase real en el entorno de pruebas.
 
 - Fondo de partida (2026-10-30): `html.fxbg .game` usa `assets/duelo/bg/bg-dia.svg` (mediodía) y oculta `canvas.kbg`; hay una mancha oscura (`.game::after`) bajo el tablero. `bg-tarde.svg` (atardecer) está listo pero sin usar. Casillas 1v1: zrow 11.6em con hueco 7.8em; multi: 8.8em con hueco 1.9em.
+
+- Cajas (2026-10-31): `D.Shop.BOXES` está vacío; sólo existe `SKIN_BOX` (Cofre de skins). Las skins de color `sk_*` (cat 'sk', `box:1`) ya no se consiguen (quien las tiene las conserva). No reintroducir cajas sin avisar.

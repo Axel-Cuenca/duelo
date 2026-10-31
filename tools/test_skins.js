@@ -9,8 +9,7 @@ module.exports = function (T) {
   let store = {}; SH.init(() => store, () => {});
   const sks = SH.ITEMS.filter(i => i.cat === 'sk');
   ok(sks.length >= 12, 'hay skins (' + sks.length + ')');
-  ok(sks.every(i => SH.boxOf[i.id]), 'todas salen de alguna caja');
-  ok(SH.BOXES.every(b => SH.poolOf(b).some(i => i.cat === 'sk')), 'cada caja trae al menos una skin');
+  ok(SH.BOXES.length === 0 && sks.every(i => !SH.boxOf[i.id]), 'las cajas se quitaron: sólo queda el Cofre de skins');
   ok(!SH.offers().some(id => SH.get(id).cat === 'sk'), 'nunca están en las ofertas del día');
   store.pts = { coins: 1e6 };
   ok(SH.buy('sk_neon').ok === false, 'no se pueden comprar');
@@ -28,15 +27,6 @@ module.exports = function (T) {
   ok(SH.setSkin('c_creeper', 'sk_neon') && SH.skinOf('c_popeye').id === 'sk_neon' && SH.skinOf('c_creeper').id === 'sk_neon', 'dos personajes con el mismo efecto, cada uno el suyo');
   { // un efecto puesto que el personaje no tiene (guardado manipulado o de la nube) se descarta
     SH.pts().sk.c_kratos = 'sk_neon'; ok(SH.pts().sk.c_kratos === undefined && SH.skinOf('c_kratos') === null, 'un efecto puesto sin tenerlo se descarta'); }
-  { // abrir cajas: el efecto sale para UN personaje concreto
-    const box = SH.BOXES.find(b => SH.poolOf(b).some(i => i.cat === 'sk')); let r = null;
-    store.pts = { coins: 1e9 };
-    for (let i = 0; i < 400 && !(r && r.item.cat === 'sk'); i++) r = SH.openBox(box.id);
-    ok(r && r.ok && r.item.cat === 'sk' && typeof r.card === 'string', 'la caja da un efecto con su personaje');
-    ok(SH.ownsSk(r.card, r.item.id) && SH.skinsFor(r.card).some(i => i.id === r.item.id), 'queda sólo en ese personaje');
-    const otros = SH.pts(); const cuantos = Object.keys(otros.skOwn).filter(c => otros.skOwn[c].includes(r.item.id)).length;
-    ok(cuantos === 1 && !otros.owned.includes(r.item.id), 'no se reparte a los demás personajes');
-  }
   store.pts = { coins: 1e6, skOwn: { c_popeye: ['sk_neon'], c_creeper: ['sk_neon'] } };
   ok(SH.equip('sk_neon') === false, 'equip() no sirve para skins');
   ok(SH.setSkin('c_popeye', 'hc_oro') === false && SH.setSkin('mal id!', 'sk_neon') === false, 'sólo skins y ids de carta válidos');

@@ -102,8 +102,8 @@
       if (D.Shop.dailyInfo()) b.jugar = 'Recompensa diaria por cobrar';
       const day = localDay();
       if (lsGet('duelo.offSeen') !== day) b.tienda = 'Ofertas nuevas de hoy';
-      const min = Math.min(...D.Shop.BOXES.map(x => x.price));
-      if (D.Shop.coins() >= min) b.cajas = 'Ya puedes abrir una caja';
+      const min = D.Shop.SKIN_BOX.price;
+      if (D.Shop.coins() >= min) b.cajas = 'Ya puedes abrir el cofre';
       if (D.Rank.pending && D.Rank.pending().length) b.ranking = 'Premio de temporada por cobrar';
       if (newsSig() && lsGet('duelo.newsSeen') !== newsSig()) b.novedades = 'Novedades sin leer';
     } catch (e) { /* nada */ }
@@ -904,7 +904,7 @@
         box.append(row);
       }
       const cur = SH.skinOf(card.id), row = h('div', { class: 'skpick' }, h('b', null, 'Efecto'));
-      if (!mine.length) { row.append(h('small', { class: 'sub' }, 'Este personaje aún no tiene efectos. Salen en las cajas (Tienda → Cajas) y cada uno es para un personaje concreto.')); box.append(row); return box; }
+      if (!mine.length) { row.append(h('small', { class: 'sub' }, 'Este personaje aún no tiene efectos. Ya no se consiguen (las cajas se quitaron) y cada uno es para un personaje concreto.')); box.append(row); return box; }
       const opt = (label, it) => h('button', { class: (it ? 'r-' + it.rar : '') + ((it ? cur && cur.id === it.id : !cur) ? ' on' : ''), onclick: () => { SH.setSkin(card.id, it ? it.id : null); redo(); } }, label);
       row.append(opt('Normal', null), ...mine.map(it => opt(it.name, it)));
       box.append(row);
@@ -2709,8 +2709,8 @@
           : btn(offer ? h('span', null, h('s', null, '✦ ' + it.price), ' ✦ ' + pr) : '✦ ' + pr, () => { const r = SH.buy(it.id); if (r.ok) { SH.equip(it.id); S.play('confirm'); shopScreen(cat); } else { S.play('error'); const m = document.querySelector('.shmsg'); if (m) m.textContent = r.error; } }, SH.coins() >= pr ? 'gold sm' : 'ghost sm'));
     };
     mount(h('div', { class: 'scr' }, h('button', { class: 'back', onclick: menu }, '← Menú'), h('h1', null, 'Tienda'),
-      h('div', { class: 'ptsbar' }, h('span', { class: 'pts' }, '✦ ', h('b', null, String(SH.coins())), ' puntos'), btn('📦 Cajas con premios al azar', () => boxScreen(), 'gold sm')),
-      h('h2', null, '🔥 Ofertas de hoy'), h('div', { class: 'sub' }, 'Cambian cada día. Comprar directo cuesta más que abrir cajas, pero el premio es seguro.'),
+      h('div', { class: 'ptsbar' }, h('span', { class: 'pts' }, '✦ ', h('b', null, String(SH.coins())), ' puntos'), btn('🎴 Cofre de skins', () => boxScreen(), 'gold sm')),
+      h('h2', null, '🔥 Ofertas de hoy'), h('div', { class: 'sub' }, 'Cambian cada día. Aquí compras directo: el premio es seguro.'),
       h('div', { class: 'shgrid' }, offerIds.map(id => tile(SH.get(id)))),
       h('div', { class: 'tabs shtabs' }, SH.CATS.map(c => h('button', { class: 'tab' + (c.id === cat ? ' on' : ''), onclick: () => shopScreen(c.id) }, c.icon + ' ' + c.name))),
       sample(), h('div', { class: 'msg err shmsg' }),
@@ -2733,7 +2733,7 @@
     scr('cajas');
     const SH = D.Shop; S.setTrack('menu');
     mount(h('div', { class: 'scr' }, h('button', { class: 'back', onclick: () => shopScreen() }, '← Tienda'), h('h1', null, 'Cajas'),
-      h('div', { class: 'ptsbar' }, h('span', { class: 'pts' }, '✦ ', h('b', null, String(SH.coins())), ' puntos'), h('span', { class: 'sub' }, 'Premios al azar. Cada premio sólo sale de su caja. Toca una caja para ver sus premios.')),
+      h('div', { class: 'ptsbar' }, h('span', { class: 'pts' }, '✦ ', h('b', null, String(SH.coins())), ' puntos'), h('span', { class: 'sub' }, 'Premios al azar. Toca el cofre para ver sus skins.')),
       h('div', { class: 'bxgrid' }, [SH.SKIN_BOX].concat(SH.BOXES).map(b => h('button', { class: 'bxcard' + (SH.coins() >= b.price ? '' : ' poor') + (b.kind === 'skins' ? ' skc' : ''), style: `--bc:${b.color}`, onclick: () => boxPrizes(b) },
         h('div', { class: 'bxic' }, b.icon), h('b', null, b.name), h('small', null, b.kind === 'skins' ? SH.poolOf(b).length + ' skins · ' + fmtPct(SH.skinChance()) + ' % cada una' : SH.poolOf(b).length + ' premios'), h('span', { class: 'bxpr' }, '✦ ' + b.price))))));
   }
