@@ -121,6 +121,8 @@
     ['si_venom_asesino', 'c_venom', 'Venom asesino', 'venom_asesino']
   ];
   for (const [id, card, name, file] of SKINS) ITEMS.push({ id, cat: 'si', name, rar: 'u', price: 0, box: 1, card, img: 'assets/skins/' + file + '.webp' });
+  // (31/10/2026) Con las cajas se fue su contenido: de la Tienda sólo quedan lo gratis de serie y las skins (Cofre de skins; los efectos de color sólo los conservan quienes ya los tienen).
+  ITEMS.splice(0, ITEMS.length, ...ITEMS.filter(i => i.free || i.cat === 'si' || i.cat === 'sk'));      // los efectos 'sk' ya no se consiguen, pero quien los tiene los conserva
   const BY = new Map(ITEMS.map(i => [i.id, i]));
   /** Cosmético por id: del catálogo o de temporada (D.Seasons, exclusivos por rango; no están en la Tienda ni en cajas). */
   const byId = id => BY.get(id) || (D.Seasons ? D.Seasons.item(id) : null) || undefined;

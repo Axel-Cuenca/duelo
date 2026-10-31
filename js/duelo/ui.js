@@ -2710,8 +2710,7 @@
     };
     mount(h('div', { class: 'scr' }, h('button', { class: 'back', onclick: menu }, '← Menú'), h('h1', null, 'Tienda'),
       h('div', { class: 'ptsbar' }, h('span', { class: 'pts' }, '✦ ', h('b', null, String(SH.coins())), ' puntos'), btn('🎴 Cofre de skins', () => boxScreen(), 'gold sm')),
-      h('h2', null, '🔥 Ofertas de hoy'), h('div', { class: 'sub' }, 'Cambian cada día. Aquí compras directo: el premio es seguro.'),
-      h('div', { class: 'shgrid' }, offerIds.map(id => tile(SH.get(id)))),
+      offerIds.length ? h('div', null, h('h2', null, '🔥 Ofertas de hoy'), h('div', { class: 'sub' }, 'Cambian cada día. Aquí compras directo: el premio es seguro.'), h('div', { class: 'shgrid' }, offerIds.map(id => tile(SH.get(id))))) : h('div', { class: 'sub' }, 'La Tienda ya no vende cosméticos: ahora todo sale del Cofre de skins.'),
       h('div', { class: 'tabs shtabs' }, SH.CATS.map(c => h('button', { class: 'tab' + (c.id === cat ? ' on' : ''), onclick: () => shopScreen(c.id) }, c.icon + ' ' + c.name))),
       sample(), h('div', { class: 'msg err shmsg' }),
       SH.exclusive(cat).length ? h('div', null, h('h2', null, '🏅 Tus premios de temporada'), h('div', { class: 'sub' }, 'Se consiguen por rango al cerrar cada temporada: no se compran ni salen de cajas.'), h('div', { class: 'shgrid' }, SH.exclusive(cat).map(tile))) : null,

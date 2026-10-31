@@ -29,22 +29,14 @@ module.exports = function (T) {
   eq(S.reward(true, false), S.PLAY_ONLINE, 'online perdida');
   let tot = 0; for (let i = 0; i < 20; i++) tot += S.reward(false, true);
   eq(tot, S.AI_DAILY_CAP, 'contra la computadora hay un tope diario');
-  // compra
-  p.coins = 10; ok(!S.buy('hc_oro').ok, 'sin puntos suficientes no compra'); eq(S.coins(), 10, 'y no se descuenta nada');
-  const pr = S.priceOf('hc_oro');
-  p.coins = 500; ok(S.buy('hc_oro').ok, 'compra'); eq(S.coins(), 500 - pr, 'descuenta el precio'); ok(S.owns('hc_oro'), 'queda en tu inventario');
-  ok(!S.buy('hc_oro').ok && S.coins() === 500 - pr, 'no se compra dos veces');
-  // equipar
-  ok(!S.equip('hc_magenta'), 'no se puede equipar lo que no tienes');
-  ok(S.equip('hc_oro') && attrs['data-hc'] === 'oro', 'equipado: el CSS recibe data-hc=oro');
+  // la Tienda ya no vende nada de lo que salía en las cajas (31/10/2026): sólo quedan lo gratis de serie y las skins del Cofre
+  ok(S.ITEMS.every(i => i.free || i.cat === 'si' || i.cat === 'sk'), 'el catálogo sólo tiene lo gratis y las skins');
+  ok(S.BOXES.length === 0, 'las cajas de rarezas se quitaron: sólo queda el Cofre de skins (test_cofre.js)');
+  eq(S.offers().length, 0, 'sin cosméticos de pago no hay ofertas del día');
+  p.coins = 500; ok(!S.buy('hc_oro').ok && S.coins() === 500, 'lo que salía en las cajas ya no se compra ni se descuenta nada');
+  ok(!S.equip('hc_oro'), 'no se puede equipar lo que ya no existe');
   // datos manipulados
   store.pts = { coins: -50, owned: ['nada', 'hc_oro'], eq: { hc: 'hc_violeta' } };
-  eq(S.coins(), 0, 'puntos negativos se corrigen a 0'); ok(!S.owns('nada'), 'ids inventados se descartan');
-  eq(S.equipped('hc').id, 'hc_cian', 'un equipado que no tienes vuelve al de serie');
-  // ---- ofertas y cajas ----
-  const o1 = S.offers(), o2 = S.offers();
-  eq(o1, o2, 'las ofertas del día son siempre las mismas ese día'); eq(o1.length, 3, '3 ofertas'); ok(o1.every(id => S.get(id).rar !== 'l' && !S.get(id).free), 'sin legendarios ni gratis en oferta');
-  ok(S.priceOf(o1[0]) < S.get(o1[0]).price, 'la oferta es más barata');
-  ok(S.BOXES.length === 0, 'las cajas de rarezas se quitaron: sólo queda el Cofre de skins (test_cofre.js)');
-  for (const it of S.ITEMS.filter(i => !i.free && !i.box && i.cat !== 'si')) ok(it.price > 0 && !S.boxOf[it.id], it.id + ' se compra directo en la Tienda');
+  eq(S.coins(), 0, 'puntos negativos se corrigen a 0'); ok(!S.owns('nada') && !S.owns('hc_oro'), 'ids inventados o retirados se descartan');
+  eq(S.equipped('hc').id, 'hc_cian', 'un equipado que ya no existe vuelve al de serie');
 };

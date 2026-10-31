@@ -148,4 +148,4 @@ match /ranks/{season}/p/{uid} {
 
 - Fondo de partida (2026-10-30): `html.fxbg .game` usa `assets/duelo/bg/bg-dia.svg` (mediodía) y oculta `canvas.kbg`; hay una mancha oscura (`.game::after`) bajo el tablero. `bg-tarde.svg` (atardecer) está listo pero sin usar. Casillas 1v1: zrow 11.6em con hueco 7.8em; multi: 8.8em con hueco 1.9em.
 
-- Cajas (2026-10-31): `D.Shop.BOXES` está vacío; sólo existe `SKIN_BOX` (Cofre de skins). Las skins de color `sk_*` (cat 'sk', `box:1`) ya no se consiguen (quien las tiene las conserva). No reintroducir cajas sin avisar.
+- Cajas (2026-10-31): `D.Shop.BOXES` está vacío; sólo existe `SKIN_BOX` (Cofre de skins). Las skins de color `sk_*` (cat 'sk', `box:1`) ya no se consiguen (quien las tiene las conserva). El resto de lo que salía en cajas (hc/ha/hm/cb/bd/av/fr/ti/ef de pago) se quitó de `ITEMS`; quedan lo gratis, las skins 'si' y los efectos 'sk' (sólo de quien ya los tiene). No reintroducir sin avisar.
